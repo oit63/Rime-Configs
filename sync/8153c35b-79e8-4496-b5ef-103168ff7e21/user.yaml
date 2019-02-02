@@ -1,0 +1,16 @@
+var:
+  option:
+    ascii_punct: true
+    full_shape: false
+    simplification: true
+  previously_selected_schema: luna_pinyin_simp
+  schema_access_time:
+    092m: 1524796290
+    cangjie5: 1536737698
+    combo_pinyin: 1508055486
+    cqlb_weightcode: 1534899292
+    cqyx_weightcode: 1534899196
+    luna_pinyin: 1534899171
+    luna_pinyin_fluency: 1536739611
+    luna_pinyin_simp: 1536739983
+    luna_pinyin_tw: 1536737694

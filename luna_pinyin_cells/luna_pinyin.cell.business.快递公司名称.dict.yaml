@@ -1,0 +1,24 @@
+---
+name: luna_pinyin.cell.business.快递公司名称
+version: "2018.09.14"
+sort: by_weight
+use_preset_vocabulary: true
+...
+
+汇通
+加运美
+联邦快递
+全球特快专递
+全一快递
+申通
+顺丰
+速尔
+天地物流
+天天
+邮宝
+圆通
+韵达
+宅急送
+中城快递
+中铁快运
+中通

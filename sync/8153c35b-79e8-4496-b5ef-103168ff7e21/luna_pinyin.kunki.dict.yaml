@@ -1,0 +1,16 @@
+---
+name: luna_pinyin.cell.cell
+version: "2018.08.22"
+sort: by_weight
+use_preset_vocabulary: true
+import_tables:
+  - luna_pinyin
+  - luna_pinyin.cell.computer
+  - luna_pinyin.cell.poetry.school
+  - luna_pinyin.cell.poetry.libai
+  - luna_pinyin.cell.poetry.mingju.daquan
+  - luna_pinyin.cell.poetry.mingju.official
+  - luna_pinyin.cell.poetry.shisanbai
+...
+
+

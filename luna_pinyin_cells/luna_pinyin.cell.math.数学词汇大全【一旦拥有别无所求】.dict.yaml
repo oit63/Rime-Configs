@@ -1,0 +1,12 @@
+---
+name: luna_pinyin.cell.math.数学词汇大全【一旦拥有别无所求】
+version: "2018.09.14"
+sort: by_weight
+use_preset_vocabulary: true
+...
+
+函数
+三角函数
+余弦函数
+正切函数
+正弦函数

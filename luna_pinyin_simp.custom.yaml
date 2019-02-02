@@ -1,0 +1,283 @@
+# luna_pinyin.custom.yaml
+#
+# 補靪功能：將朙月拼音的詞庫修改爲朙月拼音擴充詞庫
+#
+# 作者：瑾昀 <cokunhui@gmail.com>
+#
+# 部署位置：
+# ~/.config/ibus/rime  (Linux)
+# ~/Library/Rime  (Mac OS)
+# %APPDATA%\Rime  (Windows)
+#
+# 於重新部署後生效
+#
+#
+# 注意：本補靪適用於所有朙月拼音系列方案（「朙月拼音」、「朙月拼音·简化字」、「朙月拼音·臺灣正體」、「朙月拼音·語句流」）。
+# 只須將本 custom.yaml 的前面名字改爲對應的輸入方案名字然後放入用戶文件夾重新部署即可。如 luna_pinyin_simp.custom.yaml。
+# 雙拼用戶請使用 double_pinyin.custom.yaml。
+#
+#
+# 附朙月拼音系列方案與其對應的 id 一覽表：
+# 輸入方案	id
+# 朙月拼音	luna_pinyin
+# 朙月拼音·简化字	luna_pinyin_simp
+# 朙月拼音·臺灣正體	luna_pinyin_tw
+# 朙月拼音·語句流	luna_pinyin_fluency
+#
+  
+patch:
+  "key_binder/bindings":
+    # - { when: paging, accept: bracketleft, send: Page_Up }
+    # - { when: has_menu, accept: bracketright, send: Page_Down }
+    # commonly used paging keys
+    - { when: composing, accept: ISO_Left_Tab, send: Page_Up }
+    - { when: composing, accept: Shift+Tab, send: Page_Up }
+    - { when: composing, accept: Tab, send: Page_Down }
+    - { when: has_menu, accept: minus, send: Page_Up }
+    - { when: has_menu, accept: equal, send: Page_Down }
+    - { when: paging, accept: comma, send: Page_Up }
+    - { when: has_menu, accept: period, send: Page_Down }
+    - { when: paging, accept: bracketleft, send: Page_Up }
+    - { when: has_menu, accept: bracketright, send: Page_Down }
+
+	
+  switches:
+    # - name: ascii_mode
+    #   reset: 0
+    #   states: ["中文", "西文"]
+    - name: extended_charset
+      states: ["通用", "增廣"]
+    - name: zh_simp
+      reset: 1 # 强制简体输入
+      states: ["漢字", "汉字"]
+    - name: ascii_punct
+      states: ["中标", "西标"]
+    # - options: ["utf8", "gbk", "gb2312"] # (※2)字符集选单
+    #   reset: 0                           #     默认 UTF8
+    #   states:
+    #     - UTF-8
+    #     - GBK
+    #     - GB2312　
+
+  simplifier:
+    option_name: zh_simp
+    
+  engine:
+    processors:
+      - ascii_composer
+      - recognizer
+      - key_binder
+      - speller
+      - punctuator
+      - selector
+      - navigator
+      - express_editor
+    segmentors:
+      - ascii_segmentor
+      - matcher
+      - abc_segmentor
+      - punct_segmentor
+      - fallback_segmentor
+    translators:
+      - punct_translator
+      - table_translator@custom_phrase
+      - reverse_lookup_translator
+      - script_translator
+    filters:
+      - simplifier
+      - uniquifier
+      - cjk_minifier  #過濾拼音輸入法中的罕用字
+#  这个会与模糊音的开启发生冲突
+#  translator:
+#    enable_charset_filter: true #启用罕见字過濾
+
+ # 加載 easy_en 依賴
+  "schema/dependencies/@next": easy_en
+  # 載入翻譯英文的碼表翻譯器，取名爲 english
+  "engine/translators/@next": table_translator@english
+  # english 翻譯器的設定項
+  english:
+    dictionary: easy_en
+    spelling_hints: 9
+    enable_completion: true
+    enable_sentence: true
+    initial_quality: -3
+      
+ # 載入朙月拼音擴充詞庫
+  "translator/dictionary": luna_pinyin.extended
+  # 改寫拼寫運算，使得含西文的詞彙（位於 luna_pinyin.cn_en.dict.yaml 中）不影響簡拼功能（注意，此功能只適用於朙月拼音系列方案，不適用於各類雙拼方案）
+  # 本條補靪只在「小狼毫 0.9.30」、「鼠鬚管 0.9.25 」、「Rime-1.2」及更高的版本中起作用。
+  "speller/algebra/@before 0": xform/^([b-df-hj-np-tv-z])$/$1_/
+
+
+#  符号快速输入和部分符号的快速上屏
+  punctuator:
+   import_preset: luna_pinyin_simp.symbols
+ #   half_shape:
+ #     "#": "#"
+ #     "`": "`"
+ #     "~": "~"
+ #     "@": "@"
+ #     "=": "="
+ #     "!": "!"
+ #     "/": ["/", "÷"]
+ #     '\': "、"
+ #     "'": {pair: ["「", "」"]}
+ #     "[": ["【", "["]
+ #     "]": ["】", "]"]
+ #     "$": ["¥", "$", "€", "£", "¢", "¤"]
+ #     "<": ["《", "〈", "«", "<"]
+ #     ">": ["》", "〉", "»", ">"]　
+  # "punctuator/full_shape":
+ #    " " : { commit: "　" }
+ #    "," : { commit: ， }
+ #    "." : { commit: 。 }
+ #    "<" : [ 《, 〈, «, ‹ ]
+ #    ">" : [ 》, 〉, », › ]
+ #    "/" : [ 、, ／, "/", ÷ ]
+ #    "?" : { commit: ？ }
+ #    ";" : { commit: ； }
+ #    ":" : ：
+ #    "'" : { pair: [ "‘", "’" ] }
+ #    "\"" : { pair: [ "“", "”" ] }
+ #    "\\" : [ 、, ＼, "\\" ]
+ #    "|" : [ ・, ｜, "|", "§", "¦" ]
+ #    "`" : [ ｀, "`" ]
+ #    "~" : [ 〜, "~", ～, 〰 ]
+ #    "!" : { commit: ！ }
+ #    "@" : [ ＠, "@", ☯ ]
+ #    "#" : [ ＃, "#", ⌘ ]
+ #    "%" : [ ％, "%", "°", "℃" ]
+ #    "$" : [ ￥, "$", "€", "£", "¥", "¢", "¤" ]
+ #    "^" : { commit: …… }
+ #    "&" : [ ＆, "&" ]
+ #    "*" : [ ＊, "*", ・, ×, ※, ❂, · ]
+ #    "(" : （
+ #    ")" : ）
+ #    "-" : [ －, "-" ]
+ #    "_" : ——
+ #    "+" : [ ＋, "+" ]
+ #    "=" : [ ＝, "=" ]
+ #    "[" : [ 「, 【, 〔, ［ ]
+ #    "]" : [ 」, 】, 〕, ］ ]
+ #    "{" : [ 『, 〖, ｛ ]
+ #    "}" : [ 』, 〗, ｝ ]
+  # "punctuator/half_shape":
+	# '.' : [ '.', '。']
+    # "," : { commit: "," }
+    # "." : { commit: "." }
+
+ #    "<" : "<"
+ #    ">" : ">"
+ #    "/" : "/"
+ #    "?" : { commit: "?" }
+ #    ";" : { commit: ";" }
+ #    ":" : { commit: ":" }
+ #    "'" : "'"
+ #    "\"" : "\""
+ #    "\\" : "\\"
+ #    "|" : "|"
+ #    "`" : "`"
+ #    "~" : "~"
+ #    "!" : { commit: "!" }
+ #    "@" : "@"
+ #    "#" : "#"
+ #    "%" : "%"
+ #    "$" : "$"
+ #    "^" : "^"
+ #    "&" : "&"
+ #    "*" : "*"
+ #    "(" : "("
+ #    ")" : ")"
+ #    "-" : "-"
+ #    "_" : "_"
+ #    "+" : "+"
+ #    "=" : "="
+ #    "[" : "["
+ #    "]" : "]"
+ #    "{" : "{"
+ #    "}" : "}"
+ #     "/": ["/", "÷"]
+ #     '\': "、"
+ #     "'": {pair: ["「", "」"]}
+ #     "[": ["【", "["]
+ #     "]": ["】", "]"]
+ #     "$": ["¥", "$", "€", "£", "¢", "¤"]
+ #     "<": ["《", "〈", "«", "<"]
+ #     ">": ["》", "〉", "»", ">"]　
+
+# reverse_lookup:
+#   dictionary: stroke
+#   enable_completion: true
+#   prefix: "`"
+#   suffix: "'"
+#   tips: 〔笔画〕
+#   preedit_format:
+#     - xlit/hspnz/一丨丿丶乙/
+
+
+  recognizer:
+    patterns:
+      email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"
+      uppercase: "[A-Z][-_+.'0-9A-Za-z]*$"
+      url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"
+      punct: "^/([a-z]+|[0-9]0?)$"
+      
+     
+ # 模糊拼音
+  'speller/algebra':
+    - erase/^xx$/                      # 第一行保留
+
+    # 模糊音定義
+    # 需要哪組就刪去行首的 # 號，單雙向任選
+	# 规则是 前面是码 后面是方言　
+	# 四川话
+	#  川普.或.康定话
+    #- derive/^([zcs])([^h])/$1h$2/     # z, c, s => zh, ch, sh             四川    川普、藏式(如康定)、自贡
+	#  大四川话
+    #- derive/^hua$/fa/                  # hua => fua                       四川    广元　   
+	#- derive/^fei$/hui/                 # fei => hui                       四川    广元 
+    - derive/^([zcs])h/$1/             # zh, ch, sh => z, c, s             四川    大四川    不读卷舌音
+    - derive/^hu$/fu/                  # hu => fu　                        四川    大四川    不读声门摩擦音           转为唇齿摩擦音
+    - derive/^qu$/qi/                  # qu => qi　                        四川    大四川    去                       # 单字补丁
+    - derive/^([bpmf])eng$/$1ong/      # meng = mong, ...                  四川    大四川    不读eng，转读ong
+    - derive/([aeio])ng$/$1n/            # en => eng, in => ing            四川    大四川    不读后鼻音，eng等        全部转换为前鼻音
+    - derive/^n/l/                     # n => l                            四川    大四川    不读鼻音，转为舌侧音
+    - derive/^([gkh])uo$/$1ue/         # guo => gue, ...                   四川    泸定
+    - derive/^([lzcs])un$/$1en/        # zun => len, sun => sen, ...       四川    泸定  
+    - derive/^([gkhl])e$/$1uo/          # he => huo, ...                   四川    大四川
+    - derive/^([gkhl])e$/$1o/          # he => ho, ...                     四川    大四川
+    - derive/([uv])e$/$1o/             # jue => juo, lve => lvo, ...       四川    泸定
+    - derive/^rong$/yun/               # rong => yun, ...                  四川    泸定
+    - derive/^yin$/yun/                # yin => yun, ...                   四川    泸定     尹                       # 单字补丁
+    - derive/^r([uio])$/z$1/               # rong => yun, ...                  四川    泸定
+    - derive/^r([ea])n$/z$1n/               # rong => yun, ...                  四川    泸定
+    - derive/^r([e])$/z$1/               # re => ze, ...                  四川    泸定
+    - derive/^yue/y(u)o/               #  yue => yuo, ...                  四川    泸定
+    - derive/^yue/yo/               #  yue => yuo, ...                  四川    泸定
+    - derive/^yao/y(u)o/               #  yue => yuo, ...                  四川    泸定
+    - derive/^yao/yo/               #  yue => yuo, ...                  四川    泸定
+	# 单字补丁 需要以后改另外一种方法，特别指定
+    
+	# 模糊音定義先於簡拼定義，方可令簡拼支持以上模糊音
+    - abbrev/^([a-z]).+$/$1/           # 簡拼（首字母）
+    - abbrev/^([zcs]h).+$/$1/          # 簡拼（zh, ch, sh）
+
+    # 以下是一組容錯拼寫，《漢語拼音》方案以前者爲正
+    - derive/^([nl])ve$/$1ue/          # nve = nue, lve = lue
+    - derive/^([jqxy])u/$1v/           # ju = jv,
+    - derive/un$/uen/                  # gun = guen,
+    - derive/ui$/uei/                  # gui = guei,
+    - derive/iu$/iou/                  # jiu = jiou,
+
+    # 自動糾正一些常見的按鍵錯誤
+    - derive/([aeiou])ng$/$1gn/        # dagn => dang 
+    - derive/([dtngkhrzcs])o(u|ng)$/$1o/  # zho => zhong|zhou
+    - derive/ong$/on/                  # zhonguo => zhong guo
+    - derive/ao$/oa/                   # hoa => hao
+    - derive/([iu])a(o|ng?)$/a$1$2/    # tain => tian
+
+
+  # 分尖團後 v => ü 的改寫條件也要相應地擴充：
+  #'translator/preedit_format':
+  #  - "xform/([nljqxyzcs])v/$1ü/"

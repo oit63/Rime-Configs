@@ -1,0 +1,17 @@
+# Rime user dictionary
+#@/db_name	easy_en.userdb
+#@/db_type	userdb
+#@/rime_version	1.2.9
+#@/tick	15
+#@/user_id	8153c35b-79e8-4496-b5ef-103168ff7e21
+assemble 	assemble	c=1 d=1 t=1
+college 	college	c=1 d=1 t=12
+find 	find	c=1 d=1 t=11
+have 	have	c=1 d=1 t=9
+name 	name	c=1 d=1 t=4
+new 	new	c=1 d=1 t=15
+release 	release	c=1 d=1 t=2
+reverse 	reverse	c=1 d=1 t=14
+simplify 	simplify	c=1 d=1 t=13
+wine 	wine	c=1 d=1 t=3
+you 	you	c=2 d=1.97531 t=10
